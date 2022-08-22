@@ -13,7 +13,7 @@ import os
 import scipy.linalg
 from pydream.parameters import FlatParam
 from pydream.core import run_dream
-from pydream.convergence import Gelman_Rubin
+# from pydream.convergence import Gelman_Rubin
 
 log_F = np.array([-10.2880, -9.5949])
 
@@ -36,13 +36,13 @@ np.save("mixturemodel_seed.npy", m)
 
 
 def likelihood(params):
-    log_lh = np.zeros((k))
+    log_lh = np.zeros(k)
     for j in range(2):
         log_lh[j] = -0.5 * np.sum((params - mu[j, :]) ** 2) + log_F[j]
     maxll = np.max(log_lh)
     post = np.array(np.exp(log_lh - maxll), dtype="float64")
     density = np.sum(post)
-    post = post / float(density)
+    # post = post / float(density)
     log_L = np.log(density) + maxll
     # print 'params: ',params,'log_L: ',log_L,'log_lh: ',log_lh,'maxll: ',maxll,'post: ',post,'density: ',density
 

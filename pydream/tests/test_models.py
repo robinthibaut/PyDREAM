@@ -4,7 +4,7 @@ Created on Tue Jun  7 14:58:09 2016
 
 @author: Erin
 
-#Parameters defined for simple example statistical models for testing DREAM
+Parameters defined for simple example statistical models for testing DREAM
 """
 
 from pydream.parameters import SampledParam
@@ -40,9 +40,9 @@ def multidmodel_uniform():
 
     lower = np.array([-5, -9, 5, 3])
     upper = np.array([10, 2, 7, 8])
-    range = upper - lower
+    range_ = upper - lower
 
-    x = SampledParam(uniform, loc=lower, scale=range)
+    x = SampledParam(uniform, loc=lower, scale=range_)
     like = simple_likelihood
 
     return [x], like

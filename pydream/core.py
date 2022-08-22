@@ -9,17 +9,17 @@ import traceback
 
 
 def run_dream(
-    parameters,
-    likelihood,
-    nchains=5,
-    niterations=50000,
-    start=None,
-    restart=False,
-    verbose=True,
-    nverbose=10,
-    tempering=False,
-    mp_context=None,
-    **kwargs
+        parameters,
+        likelihood,
+        nchains=5,
+        niterations=50000,
+        start=None,
+        restart=False,
+        verbose=True,
+        nverbose=10,
+        tempering=False,
+        mp_context=None,
+        **kwargs
 ):
     """Run DREAM given a set of parameters with priors and a likelihood function.
 
@@ -34,18 +34,25 @@ def run_dream(
     niterations: int, optional
         The number of algorithm iterations to run. Default = 50,000
     start: iterable of arrays or single array, optional
-        Either a list of start locations to initialize chains in, or a single start location to initialize all chains in. Default: None
+        Either a list of start locations to initialize chains in, or a single start location to initialize
+        all chains in.
+        Default: None
     restart: Boolean, optional
-        Whether run is a continuation of an earlier run.  Pass this with the model_name argument to automatically load previous history and crossover probability files.  Default: False
+        Whether run is a continuation of an earlier run.  Pass this with the model_name argument to
+        automatically load previous history and crossover probability files.  Default: False
     verbose: Boolean, optional
-        Whether to print verbose output (including acceptance or rejection of moves and the current acceptance rate).  Default: True
+        Whether to print verbose output (including acceptance or rejection of moves and the current acceptance rate).
+          Default: True
     tempering: Boolean, optional
-        Whether to use parallel tempering for the DREAM chains.  Warning: this feature is untested.  Use at your own risk! Default: False
+        Whether to use parallel tempering for the DREAM chains.  Warning: this feature is untested.
+        Use at your own risk!
+        Default: False
     mp_context: multiprocessing context or None.
-        Method used to to start the processes. If it's None, the default context, which depends in Python version and OS, is used.
-        For more information please check: https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods
+        Method used to start the processes. If it's None, the default context,
+        which depends on Python version and OS, is used. For more information please check:
+        https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods
     kwargs:
-        Other arguments that will be passed to the Dream class on initialization.  For more information, see Dream class.
+        Other arguments that will be passed to the Dream class on initialization. For more information, see Dream class.
 
     Returns
     -------
@@ -56,7 +63,7 @@ def run_dream(
     """
 
     if restart:
-        if start == None:
+        if start is None:
             raise Exception("Restart run specified but no start positions given.")
         if "model_name" not in kwargs:
             raise Exception(
@@ -74,7 +81,7 @@ def run_dream(
             variables=parameters,
             history_file=kwargs["model_name"] + "_DREAM_chain_history.npy",
             crossover_file=kwargs["model_name"]
-            + "_DREAM_chain_adapted_crossoverprob.npy",
+                           + "_DREAM_chain_adapted_crossoverprob.npy",
             gamma_file=kwargs["model_name"] + "_DREAM_chain_adapted_gammalevelprob.npy",
             verbose=verbose,
             mp_context=mp_context,
@@ -131,7 +138,6 @@ def run_dream(
 
 
 def _sample_dream(args):
-
     try:
         dream_instance = args[0]
         iterations = args[1]
@@ -181,8 +187,7 @@ def _sample_dream(args):
 
 
 def _sample_dream_pt(nchains, niterations, step_instance, start, pool, verbose):
-
-    T = np.zeros((nchains))
+    T = np.zeros(nchains)
     T[0] = 1.0
     for i in range(nchains):
         T[i] = np.power(0.001, (float(i) / nchains))
@@ -204,10 +209,10 @@ def _sample_dream_pt(nchains, niterations, step_instance, start, pool, verbose):
     log_ps = np.zeros((nchains, niterations * 2, 1))
 
     q0 = start
-    naccepts = np.zeros((nchains))
-    naccepts100win = np.zeros((nchains))
-    nacceptsT = np.zeros((nchains))
-    nacceptsT100win = np.zeros((nchains))
+    naccepts = np.zeros(nchains)
+    naccepts100win = np.zeros(nchains)
+    nacceptsT = np.zeros(nchains)
+    nacceptsT100win = np.zeros(nchains)
     ttestsper100 = 100.0 / nchains
 
     for iteration in range(niterations):
@@ -244,8 +249,8 @@ def _sample_dream_pt(nchains, niterations, step_instance, start, pool, verbose):
                         " and overall temp swap acceptance rate: ",
                         overall_Tacceptance_rate_100win,
                     )
-                naccepts100win = np.zeros((nchains))
-                nacceptsT100win = np.zeros((nchains))
+                naccepts100win = np.zeros(nchains)
+                nacceptsT100win = np.zeros(nchains)
 
         returned_vals = pool.map(_sample_dream_pt_chain, args)
         qnews = [val[0] for val in returned_vals]
@@ -267,7 +272,7 @@ def _sample_dream_pt(nchains, niterations, step_instance, start, pool, verbose):
         logp2 = logpnews[random_chains[1]]
 
         alpha = ((T1 * loglike2) + (T2 * loglike1)) - (
-            (T1 * loglike1) + (T2 * loglike2)
+                (T1 * loglike1) + (T2 * loglike2)
         )
 
         if np.log(np.random.uniform()) < alpha:
@@ -335,7 +340,6 @@ def _sample_dream_pt(nchains, niterations, step_instance, start, pool, verbose):
 
 
 def _sample_dream_pt_chain(args):
-
     dream_instance = args[0]
     start = args[1]
     T = args[2]
@@ -348,46 +352,46 @@ def _sample_dream_pt_chain(args):
 
 
 def _setup_mp_dream_pool(
-    nchains, niterations, step_instance, start_pt=None, mp_context=None
+        nchains, niterations, step_instance, start_pt=None, mp_context=None
 ):
-
     min_njobs = (2 * len(step_instance.DEpairs)) + 1
     if nchains < min_njobs:
         raise Exception(
-            "Dream should be run with at least (2*DEpairs)+1 number of chains.  For current algorithmic settings, set njobs>=%s."
+            "Dream should be run with at least (2*DEpairs)+1 number of chains. For current algorithmic settings, "
+            "set njobs>=%s. "
             % str(min_njobs)
         )
-    if step_instance.history_file != False:
+    if step_instance.history_file:
         old_history = np.load(step_instance.history_file)
         len_old_history = len(old_history.flatten())
         nold_history_records = len_old_history / step_instance.total_var_dimension
         step_instance.nseedchains = nold_history_records
         if niterations < step_instance.history_thin:
             arr_dim = (
-                (np.floor(nchains * niterations / step_instance.history_thin) + nchains)
-                * step_instance.total_var_dimension
-            ) + len_old_history
+                              (np.floor(nchains * niterations / step_instance.history_thin) + nchains)
+                              * step_instance.total_var_dimension
+                      ) + len_old_history
         else:
             arr_dim = (
-                np.floor(
-                    (
-                        ((nchains * niterations) * step_instance.total_var_dimension)
-                        / step_instance.history_thin
+                    np.floor(
+                        (
+                                ((nchains * niterations) * step_instance.total_var_dimension)
+                                / step_instance.history_thin
+                        )
                     )
-                )
-                + len_old_history
+                    + len_old_history
             )
     else:
         if niterations < step_instance.history_thin:
             arr_dim = (
-                (np.floor(nchains * niterations / step_instance.history_thin) + nchains)
-                * step_instance.total_var_dimension
-            ) + (step_instance.nseedchains * step_instance.total_var_dimension)
+                              (np.floor(nchains * niterations / step_instance.history_thin) + nchains)
+                              * step_instance.total_var_dimension
+                      ) + (step_instance.nseedchains * step_instance.total_var_dimension)
         else:
             arr_dim = np.floor(
                 (
-                    (nchains * niterations / step_instance.history_thin)
-                    * step_instance.total_var_dimension
+                        (nchains * niterations / step_instance.history_thin)
+                        * step_instance.total_var_dimension
                 )
             ) + (step_instance.nseedchains * step_instance.total_var_dimension)
 
@@ -406,7 +410,7 @@ def _setup_mp_dream_pool(
     else:
         ctx = mp_context
     history_arr = ctx.Array("d", [0] * int(arr_dim))
-    if step_instance.history_file != False:
+    if step_instance.history_file:
         history_arr[0:len_old_history] = old_history.flatten()
     nCR = step_instance.nCR
     ngamma = step_instance.ngamma
@@ -423,13 +427,14 @@ def _setup_mp_dream_pool(
     n = ctx.Value("i", 0)
     tf = ctx.Value("c", b"F")
 
-    if step_instance.crossover_burnin == None:
+    if step_instance.crossover_burnin is None:
         step_instance.crossover_burnin = int(np.floor(niterations / 10))
 
-    if start_pt != None:
+    if start_pt is not None:
         if step_instance.start_random:
             print(
-                "Warning: start position provided but random_start set to True.  Overrode random_start value and starting walk at provided start position."
+                "Warning: start position provided but random_start set to True.  "
+                "Overrode random_start value and starting walk at provided start position. "
             )
             step_instance.start_random = False
 
@@ -458,17 +463,17 @@ def _setup_mp_dream_pool(
 
 
 def _mp_dream_init(
-    arr,
-    cp_arr,
-    nchains,
-    crossover_probs,
-    ncrossover_updates,
-    delta_m,
-    gamma_probs,
-    ngamma_updates,
-    delta_m_gamma,
-    val,
-    switch,
+        arr,
+        cp_arr,
+        nchains,
+        crossover_probs,
+        ncrossover_updates,
+        delta_m,
+        gamma_probs,
+        ngamma_updates,
+        delta_m_gamma,
+        val,
+        switch,
 ):
     Dream_shared_vars.history = arr
     Dream_shared_vars.current_positions = cp_arr

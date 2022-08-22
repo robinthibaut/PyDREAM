@@ -27,7 +27,8 @@ tspan = np.linspace(0, 40)
 solver = Solver(model, tspan)
 solver.run()
 
-# Load experimental data to which Robertson model will be fit here.  The "experimental data" in this case is just the total C trajectory at the default model parameters with a standard deviation of .01.
+# Load experimental data to which Robertson model will be fit here. The "experimental data" in this case is just the
+# total C trajectory at the default model parameters with a standard deviation of .01.
 pydream_path = os.path.dirname(inspect.getfile(run_dream))
 location = pydream_path + "/examples/robertson/exp_data/"
 exp_data_ctot = np.loadtxt(location + "exp_data_ctotal.txt")
@@ -40,9 +41,9 @@ like_ctot = norm(loc=exp_data_ctot, scale=exp_data_sd_ctot)
 # Create lists of sampled pysb parameter names to use for subbing in parameter values in likelihood function.
 pysb_sampled_parameter_names = [param.name for param in model.parameters_rules()]
 
-# Define likelihood function to generate simulated data that corresponds to experimental time points.
-# This function should take as input a parameter vector (parameter values are in the order dictated by first argument to run_dream function below).
-# The function returns a log probability value for the parameter vector given the experimental data.
+# Define likelihood function to generate simulated data that corresponds to experimental time points. This function
+# should take as input a parameter vector (parameter values are in the order dictated by first argument to run_dream
+# function below). The function returns a log probability value for the parameter vector given the experimental data.
 
 
 def likelihood(parameter_vector):
@@ -56,7 +57,7 @@ def likelihood(parameter_vector):
 
         # Change model parameter values to current location in parameter space
 
-        model.parameters[pname].value = 10 ** (pvalue)
+        model.parameters[pname].value = 10 ** pvalue
 
     # Simulate experimentally measured Ctotal values.
 

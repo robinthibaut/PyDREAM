@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Mar 23 16:58:34 2016
-
-@author: Erin
-"""
-
-# -*- coding: utf-8 -*-
-"""
 Created on Tue Dec  9 15:26:46 2014
 @author: Erin
 
@@ -56,8 +49,9 @@ exp_data_sd_ctot = np.loadtxt(location + "exp_data_sd_ctotal.txt")
 # Create scipy normal probability distributions for data likelihoods
 like_ctot = norm(loc=exp_data_ctot, scale=exp_data_sd_ctot)
 
+
 # Define the ODE system given y, t, and a parameter set
-def odefunc(y, t, params):
+def odefunc(y, params):
     y1, y2, y3 = y
     p1, p2, p3 = params
 
@@ -71,6 +65,7 @@ def odefunc(y, t, params):
 # Define y0, starting amounts of A, B, and C
 y0 = [1.0, 0.0, 0.0]
 
+
 # Define likelihood function to generate simulated data that corresponds to experimental time points.
 # This function should take as input a parameter vector
 # (parameter values are in the order dictated by first argument to run_dream function below).
@@ -78,7 +73,6 @@ y0 = [1.0, 0.0, 0.0]
 
 
 def likelihood(parameter_vector):
-
     parameter_vector = 10 ** np.array(parameter_vector)
 
     # Solve ODE system given parameter vector

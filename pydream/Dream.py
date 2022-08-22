@@ -1095,7 +1095,7 @@ class Dream:
         if not snooker:
             return proposed_pts
         else:
-            return proposed_pts, snooker_logp, z
+            return proposed_pts, snooker_logp, z  # noqa
 
     def snooker_update(self, n_proposed_pts, q0):
         """Generate a proposed point with snooker updating scheme.

@@ -59,7 +59,7 @@ class FlatParam(SampledParam):
 
     """
 
-    def __init__(self, test_value):
+    def __init__(self, test_value):  # noqa
         self.dsize = test_value.size
 
     def prior(self, q0):

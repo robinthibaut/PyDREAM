@@ -69,7 +69,8 @@ class Test_Dream_Initialization(unittest.TestCase):
         )
 
     def test_total_var_dimension_init(self):
-        """Test that DREAM correctly identifies the total number of dimensions in all sampled parameters for a few test cases."""
+        """Test that DREAM correctly identifies the total number of dimensions in all sampled parameters for a few
+        test cases. """
         self.param, self.like = onedmodel()
         model = Model(likelihood=self.like, sampled_parameters=self.param)
         step = Dream(model=model, variables=self.param)
@@ -246,7 +247,8 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         )
 
     def test_chain_sampling_multidim_model(self):
-        """Test that sampling from DREAM history for multi-dimensional model when the history is known matches with expected possible samples."""
+        """Test that sampling from DREAM history for multi-dimensional model when the history is known matches with
+        expected possible samples. """
         self.params, self.like = multidmodel()
         model = Model(likelihood=self.like, sampled_parameters=self.params)
         dream = Dream(model=model)
@@ -275,7 +277,8 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         )
 
     def test_proposal_generation_nosnooker_CR1(self):
-        """Test proposal generation without a snooker update with a single or multiple proposed points and a crossover value of 1 gives all dimensions changed on average as expected."""
+        """Test proposal generation without a snooker update with a single or multiple proposed points and a
+        crossover value of 1 gives all dimensions changed on average as expected. """
         self.param, self.like = multidmodel()
         model = Model(self.like, self.param)
         step = Dream(model=model)
@@ -314,7 +317,8 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         self.assertAlmostEqual(frac_kept, 0, places=1)
 
     def test_proposal_generation_nosnooker_CR33(self):
-        """Test proposal generation without a snooker update with a single or multiple proposed points and a crossover value of .33 gives 1/3 of all dimensions changed on average as expected."""
+        """Test proposal generation without a snooker update with a single or multiple proposed points and a
+        crossover value of .33 gives 1/3 of all dimensions changed on average as expected. """
         self.param, self.like = multidmodel()
         model = Model(self.like, self.param)
         step = Dream(model=model)
@@ -363,7 +367,8 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         self.assertAlmostEqual(frac_kept, 1 - 0.33, places=1)
 
     def test_proposal_generation_nosnooker_CR66(self):
-        """Test proposal generation without a snooker update with a single or multiple proposed points and a crossover value of 2/3 gives 2/3 of all dimensions changed on average as expected."""
+        """Test proposal generation without a snooker update with a single or multiple proposed points and a
+        crossover value of 2/3 gives 2/3 of all dimensions changed on average as expected. """
         self.param, self.like = multidmodel()
         model = Model(self.like, self.param)
         step = Dream(model=model)
@@ -476,7 +481,8 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
             self.assertEqual(np.array_equal(q_proposal, proposed_pts[0]), True)
 
     def test_crossover_prob_estimation(self):
-        """Test that crossover probabilities are updated as expected when changing or not changing parameter locations and giving points that give a greater jump distance."""
+        """Test that crossover probabilities are updated as expected when changing or not changing parameter
+        locations and giving points that give a greater jump distance. """
         self.param, self.like = multidmodel()
         model = Model(self.like, self.param)
         dream = Dream(model=model, save_history=False)
@@ -756,7 +762,8 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
             self.assertTrue(last_like == -600)
 
     def test_mp_sampledreamfxn(self):
-        """Test the multiprocessing DREAM sample function returns data of the correct shape independently of the run_dream wrapper."""
+        """Test the multiprocessing DREAM sample function returns data of the correct shape independently of the
+        run_dream wrapper. """
         self.params, self.like = multidmodel()
         model = Model(self.like, self.params)
         dream = Dream(model=model, verbose=False, save_history=False)
@@ -806,7 +813,8 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         self.assertEqual(len(logps[0][0]), 1)
 
     def test_mp_paralleltempering_sampledreamfxn(self):
-        """Test individual chain sampling function for parallel tempering returns an object of the correct type and with a better logp."""
+        """Test individual chain sampling function for parallel tempering returns an object of the correct type and
+        with a better logp. """
         self.params, self.like = multidmodel()
         model = Model(self.like, self.params)
         dream = Dream(model=model, verbose=False, save_history=False)
@@ -828,7 +836,8 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
 
 class Test_Dream_Full_Algorithm(unittest.TestCase):
     def test_history_correct_after_sampling_simple_model(self):
-        """Test that the history saved matches with the returned sampled parameter values for a one-dimensional test model."""
+        """Test that the history saved matches with the returned sampled parameter values for a one-dimensional test
+        model. """
         self.param, self.like = onedmodel()
         model = Model(self.like, self.param)
         step = Dream(
@@ -869,7 +878,8 @@ class Test_Dream_Full_Algorithm(unittest.TestCase):
         remove("test_history_correct_DREAM_chain_adapted_gammalevelprob.npy")
 
     def test_history_correct_after_sampling_multidim_model(self):
-        """Test that the history saved matches with the returned sampled parameter values for a multi-dimensional test model."""
+        """Test that the history saved matches with the returned sampled parameter values for a multi-dimensional
+        test model. """
         self.param, self.like = multidmodel()
         model = Model(self.like, self.param)
         step = Dream(
@@ -916,7 +926,7 @@ class Test_Dream_Full_Algorithm(unittest.TestCase):
 
         self.param, self.like = multidmodel_uniform()
         model = Model(self.like, self.param)
-        step = Dream(
+        Dream(
             model=model,
             save_history=True,
             history_thin=1,
@@ -925,7 +935,7 @@ class Test_Dream_Full_Algorithm(unittest.TestCase):
             hardboundaries=True,
             nverbose=10,
         )
-        sampled_params, logps = run_dream(
+        _, logps = run_dream(
             self.param,
             self.like,
             niterations=1000,
@@ -973,7 +983,7 @@ class Test_DREAM_examples(unittest.TestCase):
         corm_kwargs["niterations"] = 100
         corm_kwargs["verbose"] = False
         # Check likelihood fxn works
-        logp = corm_like([-5, -3, 0.1, 10, 8, 4, 0.33, -0.58, 99, 1, 0, 11])
+        corm_like([-5, -3, 0.1, 10, 8, 4, 0.33, -0.58, 99, 1, 0, 11])
 
         # Check entire algorithm will run and give results of the expected shape
         sampled_params, logps = run_dream(**corm_kwargs)
@@ -1035,7 +1045,7 @@ class Test_DREAM_examples(unittest.TestCase):
         robertson_kwargs["save_history"] = False
 
         # Check likelihood fxn runs
-        logp = robertson_like([3, 8, 0.11])
+        robertson_like([3, 8, 0.11])
 
         # Check sampling runs and gives output of expected shape
         sampled_params, logps = run_dream(**robertson_kwargs)
@@ -1055,7 +1065,7 @@ class Test_DREAM_examples(unittest.TestCase):
         rob_nop_kwargs["save_history"] = False
 
         # Check likelihood fxn runs
-        logp = rob_nop_like([3, 8, 0.11])
+        rob_nop_like([3, 8, 0.11])
 
         # Check sampling runs and gives output of expected shape
         sampled_params, logps = run_dream(**rob_nop_kwargs)

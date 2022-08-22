@@ -19,10 +19,10 @@ def Latin_hypercube(minn, maxn, N):
     y = np.random.rand(N, len(minn))
     x = np.zeros((N, len(minn)))
 
-    for j in range(len(minn)):
+    for mi in range(len(minn)):
         idx = np.random.permutation(N)
-        P = (idx - y[:, j]) / N
-        x[:, j] = minn[j] + P * (maxn[j] - minn[j])
+        P = (idx - y[:, mi]) / N
+        x[:, mi] = minn[mi] + P * (maxn[mi] - minn[mi])
 
     return x
 
@@ -57,6 +57,7 @@ def likelihood(param_vec):
 starts = [m[chain] for chain in range(3)]
 
 params = FlatParam(test_value=mu)
+
 
 if __name__ == "__main__":
     niterations = 150000
