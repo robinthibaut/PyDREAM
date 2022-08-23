@@ -10,7 +10,7 @@ from os import remove
 
 import multiprocessing as mp
 import numpy as np
-import pydream.Dream_shared_vars
+from pydream import Dream_shared_vars
 from pydream.Dream import Dream
 from pydream.core import (
     run_dream,

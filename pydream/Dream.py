@@ -9,7 +9,7 @@ from multiprocessing import pool
 
 import numpy as np
 
-from . import Dream_shared_vars
+from pydream import Dream_shared_vars
 
 
 class Dream:

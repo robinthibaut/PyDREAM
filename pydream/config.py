@@ -1,12 +1,14 @@
 # Copyright (c) 2022. Robin Thibaut, Ghent University
 
+import multiprocessing as mp
 import os
 import platform
 from dataclasses import dataclass
 from os.path import dirname, join
 
+import numpy as np
 
-__all__ = ["Machine", "Directories", "HyperParameters"]
+__all__ = ["Machine", "Directories", "HyperParameters", "Dream_shared_vars"]
 
 
 class Machine(object):
@@ -31,3 +33,18 @@ class HyperParameters:
     """Define hyperparameters"""
 
     ...
+
+
+@dataclass
+class Dream_shared_vars:
+    history: np.ndarray
+    current_positions: np.ndarray
+    nchains: int
+    cross_probs: np.ndarray
+    ncr_updates: np.ndarray
+    delta_m: np.ndarray
+    gamma_level_probs: np.ndarray
+    ngamma_updates: np.ndarray
+    delta_m_gamma: np.ndarray
+    count: mp.Value
+    history_seeded: mp.Value

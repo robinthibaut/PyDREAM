@@ -5,7 +5,7 @@ import traceback
 
 import numpy as np
 
-from . import Dream_shared_vars
+from pydream import Dream_shared_vars
 from .Dream import Dream, DreamPool
 from .model import Model
 
