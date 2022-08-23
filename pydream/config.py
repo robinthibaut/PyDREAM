@@ -8,7 +8,7 @@ from os.path import dirname, join
 
 import numpy as np
 
-__all__ = ["Machine", "Directories", "HyperParameters", "Dream_shared_vars"]
+__all__ = ["Machine", "Directories", "HyperParameters", "DreamParameters"]
 
 
 class Machine(object):
@@ -36,7 +36,7 @@ class HyperParameters:
 
 
 @dataclass
-class Dream_shared_vars:
+class DreamParameters:
     history: np.ndarray
     current_positions: np.ndarray
     nchains: int

@@ -5,7 +5,7 @@ import traceback
 
 import numpy as np
 
-from pydream import Dream_shared_vars
+from pydream import DreamParameters
 from .Dream import Dream, DreamPool
 from .model import Model
 
@@ -479,14 +479,14 @@ def _mp_dream_init(
         val,
         switch,
 ):
-    Dream_shared_vars.history = arr
-    Dream_shared_vars.current_positions = cp_arr
-    Dream_shared_vars.nchains = nchains
-    Dream_shared_vars.cross_probs = crossover_probs
-    Dream_shared_vars.ncr_updates = ncrossover_updates
-    Dream_shared_vars.delta_m = delta_m
-    Dream_shared_vars.gamma_level_probs = gamma_probs
-    Dream_shared_vars.ngamma_updates = ngamma_updates
-    Dream_shared_vars.delta_m_gamma = delta_m_gamma
-    Dream_shared_vars.count = val
-    Dream_shared_vars.history_seeded = switch
+    DreamParameters.history = arr
+    DreamParameters.current_positions = cp_arr
+    DreamParameters.nchains = nchains
+    DreamParameters.cross_probs = crossover_probs
+    DreamParameters.ncr_updates = ncrossover_updates
+    DreamParameters.delta_m = delta_m
+    DreamParameters.gamma_level_probs = gamma_probs
+    DreamParameters.ngamma_updates = ngamma_updates
+    DreamParameters.delta_m_gamma = delta_m_gamma
+    DreamParameters.count = val
+    DreamParameters.history_seeded = switch

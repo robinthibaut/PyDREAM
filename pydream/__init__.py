@@ -1,1 +1,1 @@
-from .config import Dream_shared_vars
+from .config import DreamParameters

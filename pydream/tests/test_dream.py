@@ -10,7 +10,7 @@ from os import remove
 
 import multiprocessing as mp
 import numpy as np
-from pydream import Dream_shared_vars
+from pydream import DreamParameters
 from pydream.Dream import Dream
 from pydream.core import (
     run_dream,
@@ -224,14 +224,14 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         dream = Dream(model=model)
         history_arr = mp.Array("d", [0] * 2 * dream.total_var_dimension)
         n = mp.Value("i", 0)
-        pydream.Dream_shared_vars.history = history_arr
-        pydream.Dream_shared_vars.count = n
+        pydream.DreamParameters.history = history_arr
+        pydream.DreamParameters.count = n
         chains_added_to_history = []
         for i in range(2):
             start = i * dream.total_var_dimension
             end = start + dream.total_var_dimension
             chain = dream.draw_from_prior(dream.variables)
-            pydream.Dream_shared_vars.history[start:end] = chain
+            pydream.DreamParameters.history[start:end] = chain
             chains_added_to_history.append(chain)
         sampled_chains = dream.sample_from_history(
             nseedchains=2, DEpairs=1, ndimensions=dream.total_var_dimension
@@ -254,14 +254,14 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         dream = Dream(model=model)
         history_arr = mp.Array("d", [0] * 2 * dream.total_var_dimension)
         n = mp.Value("i", 0)
-        pydream.Dream_shared_vars.history = history_arr
-        pydream.Dream_shared_vars.count = n
+        pydream.DreamParameters.history = history_arr
+        pydream.DreamParameters.count = n
         chains_added_to_history = []
         for i in range(2):
             start = i * dream.total_var_dimension
             end = start + dream.total_var_dimension
             chain = dream.draw_from_prior(model.sampled_parameters)
-            pydream.Dream_shared_vars.history[start:end] = chain
+            pydream.DreamParameters.history[start:end] = chain
             chains_added_to_history.append(chain)
         sampled_chains = dream.sample_from_history(
             nseedchains=2, DEpairs=1, ndimensions=dream.total_var_dimension
@@ -284,8 +284,8 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         step = Dream(model=model)
         history_arr = mp.Array("d", list(range(120)))
         n = mp.Value("i", 0)
-        pydream.Dream_shared_vars.history = history_arr
-        pydream.Dream_shared_vars.count = n
+        pydream.DreamParameters.history = history_arr
+        pydream.DreamParameters.count = n
         step.nseedchains = 20
         q0 = np.array([2, 3, 4, 5])
         dims_kept = 0
@@ -324,8 +324,8 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         step = Dream(model=model)
         history_arr = mp.Array("d", list(range(120)))
         n = mp.Value("i", 0)
-        pydream.Dream_shared_vars.history = history_arr
-        pydream.Dream_shared_vars.count = n
+        pydream.DreamParameters.history = history_arr
+        pydream.DreamParameters.count = n
         step.nseedchains = 20
         q0 = np.array([2, 3, 4, 5])
         dims_kept = 0
@@ -374,8 +374,8 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         step = Dream(model=model)
         history_arr = mp.Array("d", list(range(120)))
         n = mp.Value("i", 0)
-        pydream.Dream_shared_vars.history = history_arr
-        pydream.Dream_shared_vars.count = n
+        pydream.DreamParameters.history = history_arr
+        pydream.DreamParameters.count = n
         step.nseedchains = 20
         q0 = np.array([2, 3, 4, 5])
         dims_kept = 0
@@ -423,8 +423,8 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         step = Dream(model=model)
         history_arr = mp.Array("d", list(range(120)))
         n = mp.Value("i", 0)
-        pydream.Dream_shared_vars.history = history_arr
-        pydream.Dream_shared_vars.count = n
+        pydream.DreamParameters.history = history_arr
+        pydream.DreamParameters.count = n
         step.nseedchains = 20
         q0 = np.array([2, 3, 4, 5])
         proposed_pt, snooker_logp, z = step.generate_proposal_points(
@@ -498,11 +498,11 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         dream.nchains = 5
         delta_m = mp.Array("d", [0] * nCR)
         dream.chain_n = 0
-        pydream.Dream_shared_vars.cross_probs = crossover_probabilities
-        pydream.Dream_shared_vars.count = n
-        pydream.Dream_shared_vars.ncr_updates = ncrossover_updates
-        pydream.Dream_shared_vars.current_positions = current_position_arr
-        pydream.Dream_shared_vars.delta_m = delta_m
+        pydream.DreamParameters.cross_probs = crossover_probabilities
+        pydream.DreamParameters.count = n
+        pydream.DreamParameters.ncr_updates = ncrossover_updates
+        pydream.DreamParameters.current_positions = current_position_arr
+        pydream.DreamParameters.delta_m = delta_m
         q0 = np.array([1, 2, 3, 4])
         q_new = np.array([1, 2, 3, 4])
         new_cr_probs = dream.estimate_crossover_probabilities(
@@ -550,9 +550,9 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         history_arr = mp.Array("d", [0] * 4 * step.total_var_dimension)
         n = mp.Value("i", 0)
         nchains = mp.Value("i", 3)
-        pydream.Dream_shared_vars.history = history_arr
-        pydream.Dream_shared_vars.count = n
-        pydream.Dream_shared_vars.nchains = nchains
+        pydream.DreamParameters.history = history_arr
+        pydream.DreamParameters.count = n
+        pydream.DreamParameters.nchains = nchains
         test_history = np.array([[1], [3], [5], [7]])
         for chainpoint in test_history:
             for point in chainpoint:
@@ -562,7 +562,7 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
                     q_new=point,
                     len_history=len(history_arr),
                 )
-        history_arr_np = np.frombuffer(pydream.Dream_shared_vars.history.get_obj())
+        history_arr_np = np.frombuffer(pydream.DreamParameters.history.get_obj())
         history_arr_np_reshaped = history_arr_np.reshape(np.shape(test_history))
         self.assertIs(np.array_equal(history_arr_np_reshaped, test_history), True)
         remove("test_history_recording_DREAM_chain_history.npy")
@@ -577,9 +577,9 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         history_arr = mp.Array("d", [0] * 4 * dream.total_var_dimension * 3)
         n = mp.Value("i", 0)
         nchains = mp.Value("i", 3)
-        pydream.Dream_shared_vars.history = history_arr
-        pydream.Dream_shared_vars.count = n
-        pydream.Dream_shared_vars.nchains = nchains
+        pydream.DreamParameters.history = history_arr
+        pydream.DreamParameters.count = n
+        pydream.DreamParameters.nchains = nchains
         test_history = np.array(
             [
                 [[1, 2, 3, 4], [3, 4, 5, 6], [5, 6, 7, 8]],
@@ -596,7 +596,7 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
                     q_new=point,
                     len_history=len(history_arr),
                 )
-        history_arr_np = np.frombuffer(pydream.Dream_shared_vars.history.get_obj())
+        history_arr_np = np.frombuffer(pydream.DreamParameters.history.get_obj())
         history_arr_np_reshaped = history_arr_np.reshape(np.shape(test_history))
         self.assertIs(np.array_equal(history_arr_np_reshaped, test_history), True)
         remove("test_history_recording_DREAM_chain_history.npy")
