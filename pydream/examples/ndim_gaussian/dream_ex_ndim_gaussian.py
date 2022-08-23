@@ -8,11 +8,18 @@ Created on Wed Apr  8 18:01:34 2015
 # An implementation of example 2 from MT-DREAM(ZS) original Matlab code. (see Laloy and Vrugt 2012)
 # 200 dimensional Gaussian distribution
 
-import numpy as np
 import os
-from pydream.parameters import FlatParam
-from pydream.core import run_dream
+
+import numpy as np
+import seaborn as sns
+from matplotlib import pyplot as plt
+
 from pydream.convergence import Gelman_Rubin
+from pydream.core import run_dream
+from pydream.parameters import FlatParam
+from pydream.config import Directories
+
+main_dir = Directories.main_dir
 
 
 def Latin_hypercube(minn, maxn, N):
@@ -49,7 +56,7 @@ np.save("ndim_gaussian_seed.npy", m)
 
 
 def likelihood(param_vec):
-    logp = log_F - 0.5 * np.sum(param_vec * np.dot(invC, param_vec))
+    logp = log_F - .5 * np.sum(param_vec * np.dot(invC, param_vec))
 
     return logp
 
@@ -58,10 +65,10 @@ starts = [m[chain] for chain in range(3)]
 
 params = FlatParam(test_value=mu)
 
-
 if __name__ == "__main__":
     niterations = 150000
-    # Run DREAM sampling.  Documentation of DREAM options is in Dream.py.
+    # niterations = 150000
+    # Run DREAM sampling. Documentation of DREAM options is in Dream.py.
     converged = False
     total_iterations = niterations
     nchains = 3
@@ -167,30 +174,30 @@ if __name__ == "__main__":
         if np.all(GR < 1.2):
             converged = True
 
-    try:
-        # Plot output
-        import seaborn as sns
-        from matplotlib import pyplot as plt
-
-        total_iterations = len(old_samples[0])
-        burnin = total_iterations / 2
-        samples = np.concatenate(
-            (
-                old_samples[0][burnin:, :],
-                old_samples[1][burnin:, :],
-                old_samples[2][burnin:, :],
-            )
+    # try:
+    # plot results
+    total_iterations = len(old_samples[0])
+    burnin = total_iterations / 2
+    samples = np.concatenate(
+        (
+            old_samples[0][burnin:, :],
+            old_samples[1][burnin:, :],
+            old_samples[2][burnin:, :],
         )
+    )
 
-        ndims = len(old_samples[0][0])
-        colors = sns.color_palette(n_colors=ndims)
-        for dim in range(ndims):
-            fig = plt.figure()
-            sns.distplot(samples[:, dim], color=colors[dim])
-            fig.savefig("PyDREAM_example_NDimGauss_dimension_" + str(dim))
+    ndims = len(old_samples[0][0])
+    colors = sns.color_palette(n_colors=ndims)
+    for dim in range(ndims):
+        fig = plt.figure()
+        sns.distplot(samples[:, dim], color=colors[dim])
+        fig_name = os.path.join(main_dir, f"PyDREAM_example_NDimGauss_dimension_{dim}.png")
+        fig.savefig(fig_name, dpi=300, bbox_inches="tight")
+        plt.show()
+        plt.close(fig)
 
-    except ImportError:
-        pass
+    # except Exception as e:
+    #     print(e)
 
 else:
 

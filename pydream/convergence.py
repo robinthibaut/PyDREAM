@@ -2,6 +2,18 @@ import numpy as np
 
 
 def Gelman_Rubin(sampled_parameters):
+    """
+    Calculate the Gelman-Rubin diagnostic for a set of MCMC samples.
+    Parameters
+    ----------
+    sampled_parameters: list
+        A list of arrays of MCMC samples for each parameter.
+
+    Returns
+    -------
+    R: array
+        The Gelman-Rubin diagnostic.
+    """
     nsamples = len(sampled_parameters[0])
     nchains = len(sampled_parameters)
     nburnin = nsamples // 2

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import numpy as np
 import multiprocessing as mp
+import traceback
+
+import numpy as np
+
 from . import Dream_shared_vars
 from .Dream import Dream, DreamPool
 from .model import Model
-import traceback
 
 
 def run_dream(
@@ -30,7 +32,7 @@ def run_dream(
     likelihood: function
         A user-defined likelihood function
     nchains: int, optional
-        The number of parallel DREAM chains to run.  Default = 5
+        The number of parallel DREAM chains to run. Default = 5
     niterations: int, optional
         The number of algorithm iterations to run. Default = 50,000
     start: iterable of arrays or single array, optional
@@ -39,12 +41,14 @@ def run_dream(
         Default: None
     restart: Boolean, optional
         Whether run is a continuation of an earlier run.  Pass this with the model_name argument to
-        automatically load previous history and crossover probability files.  Default: False
+        automatically load previous history and crossover probability files. Default: False
     verbose: Boolean, optional
         Whether to print verbose output (including acceptance or rejection of moves and the current acceptance rate).
           Default: True
+    nverbose: int, optional
+        The number of iterations between printing the current acceptance rate. Default: 10
     tempering: Boolean, optional
-        Whether to use parallel tempering for the DREAM chains.  Warning: this feature is untested.
+        Whether to use parallel tempering for the DREAM chains. Warning: this feature is untested.
         Use at your own risk!
         Default: False
     mp_context: multiprocessing context or None.
@@ -440,7 +444,7 @@ def _setup_mp_dream_pool(
 
     p = DreamPool(
         nchains,
-        context=ctx,
+        context_=ctx,
         initializer=_mp_dream_init,
         initargs=(
             history_arr,

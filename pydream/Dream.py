@@ -1,65 +1,18 @@
 # -*- coding: utf-8 -*-
 
-import numpy as np
-import random
-from . import Dream_shared_vars
-from datetime import datetime
-import traceback
 import multiprocessing as mp
-from multiprocessing import pool
+import random
 import time
+import traceback
+from datetime import datetime
+from multiprocessing import pool
+
+import numpy as np
+
+from . import Dream_shared_vars
 
 
 class Dream:
-    """An implementation of the MT-DREAM\ :sub:`(ZS)`\  algorithm introduced in:
-        Laloy, E. & Vrugt, J. A. High-dimensional posterior exploration of hydrologic models using multiple-try DREAM\ :sub:`(ZS)`\  and high-performance computing. Water Resources Research 48, W01526 (2012).
-
-    Parameters
-    ----------
-    variables : iterable of instance(s) of SampledParam class
-        Model parameters to be sampled with specified prior.
-    nseedchains : int
-        Number of draws with which to initialize the DREAM history.  Default = 10 * n dimensions
-    nCR : int
-        Number of crossover values to sample from during run (and to fit during crossover burn-in period).  Default = 3
-    adapt_crossover : bool
-        Whether to adapt crossover values during the burn-in period.  Default is to adapt.
-    crossover_burnin : int
-        Number of iterations to fit the crossover values.  Defaults to 10% of total iterations.
-    DEpairs : int or list
-        Number of chain pairs to use for crossover and selection of next point.  Default = 1.  Can pass a list to have a random number of pairs selected every iteration.
-    lamb : float
-        e sub d in DREAM papers.  Random error for ergodicity.  Default = .05
-    zeta : float
-        Epsilon in DREAM papers.  Randomization term. Default = 1e-12
-    history_thin : int
-        Thinning rate for history to reduce storage requirements.  Every n-th iteration will be added to the history.
-    snooker : float
-        Probability of proposing a snooker update.  Default is .1.  To forego snooker updates, set to 0.
-    p_gamma_unity : float
-        Probability of proposing a point with gamma=unity (i.e. a point relatively far from the current point to enable jumping between disconnected modes).  Default = .2.
-    start_random : bool
-        Whether to intialize chains from a random point in parameter space drawn from the prior (default = yes).  Will override starting position set when sample was called, if any.
-    save_history : bool
-        Whether to save the history to file at the end of the run (essential if you want to continue the run).  Default is yes.
-    history_file : str
-        Name of history file to be loaded.  Assumed to be in directory you ran the script from.  If False, no file to be loaded.
-    crossover_file : str
-        Name of crossover file to be loaded. Assumed to be in directory you ran the script from.  If False, no file to be loaded.
-    multitry : bool
-        Whether to utilize multi-try sampling.  Default is no.  If set to True, will be set to 5 multiple tries.  Can also directly specify an integer if desired.
-    parallel : bool
-        Whether to run multi-try samples in parallel (using multiprocessing).  Default is false.  Irrelevant if multitry is set to False.
-    verbose : bool
-        Whether to print verbose progress.  Default is false.
-    model_name : str
-        A model name to be used as a prefix when saving history and crossover value files.
-    hardboundaries : bool
-        Whether to relect point back into bounds of hard prior (i.e., if using a uniform prior, reflect points outside of boundaries back in, so you don't waste time looking at points with logpdf = -inf).
-    mp_context : multiprocessing context or None.
-        Method used to to start the processes. If it's None, the default context, which depends in Python version and OS, is used.
-        For more information please check: https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods
-    """
 
     def __init__(
             self,
@@ -91,6 +44,77 @@ class Dream:
             **kwargs
     ):
 
+        """
+
+        An implementation of the MT-DREAM\ :sub:`(ZS)`\  algorithm introduced in:
+        Laloy, E. & Vrugt, J. A. High-dimensional posterior exploration of hydrologic models using multiple-try
+        DREAM\ :sub:`(ZS)`\  and high-performance computing. Water Resources Research 48, W01526 (2012).
+
+        Parameters
+        ----------
+        model : function
+        variables : iterable of instance(s) of SampledParam class
+            Model parameters to be sampled with specified prior.
+        nseedchains : int
+            Number of draws with which to initialize the DREAM history. Default = 10 * n dimensions
+        nCR : int
+            Number of crossover values to sample from during run (and to fit during crossover burn-in period).
+            Default = 3
+        adapt_crossover : bool
+            Whether to adapt crossover values during the burn-in period. Default is to adapt.
+        adapt_gamma : bool
+            Whether to adapt gamma values during the burn-in period. Default is not to adapt.
+        crossover_burnin : int
+            Number of iterations to fit the crossover values. Defaults to 10% of total iterations.
+        DEpairs : int or list
+            Number of chain pairs to use for crossover and selection of next point. Default = 1. Can pass a list to
+            have a random number of pairs selected every iteration.
+        lamb : float
+            e sub d in DREAM papers. Random error for ergodicity. Default = .05
+        zeta : float
+            Epsilon in DREAM papers. Randomization term. Default = 1e-12
+        history_thin : int
+            Thinning rate for history to reduce storage requirements. Every n-th iteration will be added to the history.
+        snooker : float
+            Probability of proposing a snooker update. Default is .1. To forego snooker updates, set to 0.
+        p_gamma_unity : float
+            Probability of proposing a point with gamma=unity (i.e., a point relatively far from the current point
+            to enable jumping between disconnected modes). Default = .2.
+        start_random : bool
+            Whether to intialize chains from a random point in parameter space drawn from the prior (default = yes).
+              Will override starting position set when sample was called, if any.
+        save_history : bool
+            Whether to save the history to file at the end of the run (essential if you want to continue the run).
+            Default is yes.
+        history_file : str
+            Name of history file to be loaded. Assumed to be in directory you ran the script from.
+            If False, no file to be loaded.
+        crossover_file : str
+            Name of crossover file to be loaded. Assumed to be in directory you ran the script from.
+            If False, no file to be loaded.
+        gamma_file : str
+            Name of gamma file to be loaded. Assumed to be in directory you ran the script from.
+            If False, no file to be loaded.
+        multitry : bool
+            Whether to utilize multi-try sampling. Default is no. If set to True, will be set to 5 multiple tries.
+             Can also directly specify an integer if desired.
+        parallel : bool
+            Whether to run multi-try samples in parallel (using multiprocessing).
+            Default is false. Irrelevant if multitry is set to False.
+        verbose : bool
+            Whether to print verbose progress. Default is false.
+        model_name : str
+            A model name to be used as a prefix when saving history and crossover value files.
+        hardboundaries : bool
+            Whether to relect point back into bounds of hard prior (i.e., if using a uniform prior, reflect points outside
+             of boundaries back in, so you don't waste time looking at points with logpdf = -inf).
+        mp_context : multiprocessing context or None.
+            Method used to start the processes. If it's None, the default context, which depends on Python version and OS,
+             is used.
+            For more information please check:
+            https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods
+        """
+
         # Set Dream multiprocessing context
         self.mp_context = mp_context
         # Set model and variable attributes (if no variables passed, set to all parameters)
@@ -112,7 +136,7 @@ class Dream:
             if self.total_var_dimension == 1:
                 self.boundary_mask = True
             else:
-                self.boundary_mask = np.ones(self.total_var_dimension, dtype=bool)
+                self.boundary_mask = np.ones(self.total_var_dimension, dtype=bool)  # Mask for boundaries
             self.mins = []
             self.maxs = []
             n = 0
@@ -141,7 +165,7 @@ class Dream:
                 + str(nCR)
                 + ") is less than the total dimension of all variables ("
                 + str(self.total_var_dimension)
-                + ").  Setting the number of crossover values to be equal to the total variable dimension."
+                + "). Setting the number of crossover values to be equal to the total variable dimension."
             )
 
         # If there is only one variable dimension, don't adapt crossover values
@@ -165,7 +189,7 @@ class Dream:
             self.nCR = len(self.CR_probabilities)
             if self.adapt_crossover:
                 print(
-                    "Warning: Crossover values loaded and adapt_crossover = True.  Crossover values will be further "
+                    "Warning: Crossover values loaded and adapt_crossover = True. Crossover values will be further "
                     "adapted. "
                 )
         else:
@@ -177,7 +201,7 @@ class Dream:
             self.gamma_probabilities = np.load(gamma_file)
             if adapt_gamma:
                 print(
-                    "Warning: Gamma values loaded and adapt gamma = True.  Gamma values will be further adapted."
+                    "Warning: Gamma values loaded and adapt gamma = True. Gamma values will be further adapted."
                 )
         else:
             self.gamma_probabilities = [
@@ -291,7 +315,7 @@ class Dream:
                     if self.verbose:
                         print("Start: ", q0)
 
-                # Also get length of history array so we know when to save it at end of run.
+                # Also get length of history array, so we know when to save it at end of run.
                 if self.save_history:
                     with Dream_shared_vars.history.get_lock():
                         self.len_history = len(
@@ -300,7 +324,7 @@ class Dream:
 
             except AttributeError:
                 raise Exception(
-                    "Dream should be run with multiple chains in parallel.  Set nchains > 1."
+                    "Dream should be run with multiple chains in parallel. Set nchains > 1."
                 )
 
         try:
@@ -336,7 +360,7 @@ class Dream:
                         self.multitry, q0, CR, DEpair_choice, gamma_level, snooker=True
                     )
 
-            if self.last_logp == None:
+            if self.last_logp is None:
                 self.last_prior, self.last_like = self.logp(q0)
                 self.last_logp = T * self.last_like + self.last_prior
 
@@ -475,7 +499,7 @@ class Dream:
                 if self.multitry == 1:
                     if self.verbose:
                         print(
-                            "Accepted point.  New logp: ",
+                            "Accepted point. New logp: ",
                             q_logp,
                             " old logp: ",
                             self.last_logp,
@@ -486,7 +510,7 @@ class Dream:
                 else:
                     if self.verbose:
                         print(
-                            "Accepted point.  New logp: ",
+                            "Accepted point. New logp: ",
                             q_logp,
                             " old logp: ",
                             self.last_logp,
@@ -508,7 +532,7 @@ class Dream:
                 if self.multitry == 1:
                     if self.verbose:
                         print(
-                            "Did not accept point.  Kept old logp: ",
+                            "Did not accept point. Kept old logp: ",
                             self.last_logp,
                             " Tested logp: ",
                             q_logp,
@@ -519,7 +543,7 @@ class Dream:
                 else:
                     if self.verbose:
                         print(
-                            "Did not accept point.  Kept old logp: ",
+                            "Did not accept point. Kept old logp: ",
                             self.last_logp,
                             " Tested logp: ",
                             q_logp,
@@ -575,7 +599,9 @@ class Dream:
                     and not np.any(np.array(self.gamma) == 1.0)
                     and not run_snooker
             ):
-                with Dream_shared_vars.gamma_level_probs.get_lock() and Dream_shared_vars.count.get_lock() and Dream_shared_vars.ngamma_updates.get_lock() and Dream_shared_vars.current_positions.get_lock() and Dream_shared_vars.delta_m_gamma.get_lock():
+                with Dream_shared_vars.gamma_level_probs.get_lock() and Dream_shared_vars.count.get_lock() and \
+                     Dream_shared_vars.ngamma_updates.get_lock() and Dream_shared_vars.current_positions.get_lock() \
+                     and Dream_shared_vars.delta_m_gamma.get_lock():
                     self.gamma_probabilities = self.estimate_gamma_level_probs(
                         self.total_var_dimension, q0, q_new, gamma_level
                     )
@@ -1451,15 +1477,15 @@ class DreamPool(pool.Pool):
             initializer=None,
             initargs=(),
             maxtasksperchild=None,
-            context=None,
+            context_=None,
     ):
-        if context is None:
-            context = mp.get_context()
-        context = _nondaemon_context_mapper[context._name]
+        if context_ is None:
+            context_ = mp.get_context()
+        context_ = _nondaemon_context_mapper[context_._name]
         super(DreamPool, self).__init__(
             processes=processes,
             initializer=initializer,
             initargs=initargs,
             maxtasksperchild=maxtasksperchild,
-            context=context,
+            context=context_,
         )
