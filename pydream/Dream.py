@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import multiprocessing as mp
 import random
 import time
@@ -579,7 +577,9 @@ class Dream:
                 and 10 < self.iter < self.crossover_burnin
                 and not np.any(np.array(self.gamma) == 1.0)
             ):
-                with DreamParameters.cross_probs.get_lock() and DreamParameters.count.get_lock() and DreamParameters.ncr_updates.get_lock() and DreamParameters.current_positions.get_lock() and DreamParameters.delta_m.get_lock():
+                with DreamParameters.cross_probs.get_lock() and DreamParameters.count.get_lock() and \
+                     DreamParameters.ncr_updates.get_lock() and DreamParameters.current_positions.get_lock() \
+                     and DreamParameters.delta_m.get_lock():
                     # If a snooker update was run, then regardless of the originally selected CR, a CR=1.0 was used.
                     if not run_snooker:
                         self.CR_probabilities = self.estimate_crossover_probabilities(
@@ -597,7 +597,8 @@ class Dream:
                 and not np.any(np.array(self.gamma) == 1.0)
                 and not run_snooker
             ):
-                with DreamParameters.gamma_level_probs.get_lock() and DreamParameters.count.get_lock() and DreamParameters.ngamma_updates.get_lock() and DreamParameters.current_positions.get_lock() and DreamParameters.delta_m_gamma.get_lock():
+                with DreamParameters.gamma_level_probs.get_lock() and DreamParameters.count.get_lock() and \
+                     DreamParameters.ngamma_updates.get_lock() and DreamParameters.current_positions.get_lock() and DreamParameters.delta_m_gamma.get_lock():
                     self.gamma_probabilities = self.estimate_gamma_level_probs(
                         self.total_var_dimension, q0, q_new, gamma_level
                     )
@@ -610,13 +611,16 @@ class Dream:
                     nchains_finished_burnin = DreamParameters.nchains.value
 
                 if self.adapt_gamma:
-                    with DreamParameters.gamma_level_probs.get_lock() and DreamParameters.count.get_lock() and DreamParameters.ngamma_updates.get_lock() and DreamParameters.current_positions.get_lock() and DreamParameters.delta_m_gamma.get_lock():
+                    with DreamParameters.gamma_level_probs.get_lock() and DreamParameters.count.get_lock() and \
+                         DreamParameters.ngamma_updates.get_lock() and DreamParameters.current_positions.get_lock() and DreamParameters.delta_m_gamma.get_lock():
                         self.gamma_probabilities = self.estimate_gamma_level_probs(
                             self.total_var_dimension, q0, q_new, gamma_level
                         )
 
                 if self.adapt_crossover:
-                    with DreamParameters.cross_probs.get_lock() and DreamParameters.count.get_lock() and DreamParameters.ncr_updates.get_lock() and DreamParameters.current_positions.get_lock() and DreamParameters.delta_m.get_lock():
+                    with DreamParameters.cross_probs.get_lock() and DreamParameters.count.get_lock() and \
+                         DreamParameters.ncr_updates.get_lock() and DreamParameters.current_positions.get_lock() and\
+                         DreamParameters.delta_m.get_lock():
                         # If a snooker update was run, then regardless of the originally selected CR, a CR=1.0 was used.
                         if not run_snooker:
                             self.CR_probabilities = (

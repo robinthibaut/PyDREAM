@@ -5,18 +5,19 @@ Created on Wed Mar 23 16:58:34 2016
 @author: Erin
 """
 
-from pydream.core import run_dream
-from pysb.integrate import Solver
-import numpy as np
-from pydream.parameters import SampledParam
-from scipy.stats import norm, uniform
-import os
 import inspect
-from pydream.convergence import Gelman_Rubin
+import os
 
+import numpy as np
 from pysb.examples.robertson import model
+from pysb.integrate import Solver
+from scipy.stats import norm, uniform
 
-# Initialize PySB solver object for running simulations.  Simulation timespan should match experimental data.
+from pydream.convergence import Gelman_Rubin
+from pydream.core import run_dream
+from pydream.parameters import SampledParam
+
+# Initialize PySB solver object for running simulations. Simulation timespan should match experimental data.
 tspan = np.linspace(0, 40)
 solver = Solver(model, tspan)
 solver.run()

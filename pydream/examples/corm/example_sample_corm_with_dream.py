@@ -58,7 +58,8 @@ like_PGs = norm(loc=exp_data_PG, scale=exp_data_sd_PG)
 like_PGGs = norm(loc=exp_data_PGG, scale=exp_data_sd_PGG)
 like_thermobox = norm(loc=1, scale=1e-2)
 
-# Create lists of sampled pysb parameter names to use for subbing in parameter values in likelihood function and for setting all kfs to diffusion limited value.
+# Create lists of sampled pysb parameter names to use for subbing in parameter values in likelihood function and for
+# setting all kfs to diffusion limited value.
 pysb_sampled_parameter_names = [
     "kr_AA_cat2",
     "kcat_AA2",

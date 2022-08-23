@@ -10,7 +10,9 @@ from os import remove
 
 import multiprocessing as mp
 import numpy as np
-from pydream import DreamParameters
+
+import pydream
+
 from pydream.Dream import Dream
 from pydream.core import (
     run_dream,

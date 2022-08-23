@@ -8,11 +8,13 @@ Created on Wed Apr  8 18:01:34 2015
 # An implementation of example 3 from MT-DREAM(ZS) original Matlab code.
 # Mixture Model
 
-import numpy as np
 import os
+
+import numpy as np
 import scipy.linalg
-from pydream.parameters import FlatParam
+
 from pydream.core import run_dream
+from pydream.parameters import FlatParam
 
 # from pydream.convergence import Gelman_Rubin
 
@@ -25,9 +27,9 @@ mu1 = np.linspace(-5, -5, num=d)
 mu2 = np.linspace(5, 5, num=d)
 mu = np.array([mu1, mu2])
 C = np.identity(d)
-L = scipy.linalg.cholesky(C, lower=False)
-diagL = np.diag(L)
-logDetSigma = 2 * np.sum(np.log(diagL))
+L = scipy.linalg.cholesky(C, lower=False)  # Cholesky decomposition of covariance matrix
+diagL = np.diag(L)  # diagonal elements of L
+logDetSigma = 2 * np.sum(np.log(diagL))  # log of determinant of covariance matrix
 cov = np.identity(10)
 mean = np.linspace(0, 0, num=10)
 # Create initial samples matrix m that will be loaded in as DREAM history file
