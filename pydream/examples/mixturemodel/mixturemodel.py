@@ -13,6 +13,7 @@ import os
 import scipy.linalg
 from pydream.parameters import FlatParam
 from pydream.core import run_dream
+
 # from pydream.convergence import Gelman_Rubin
 
 log_F = np.array([-10.2880, -9.5949])

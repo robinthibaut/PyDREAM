@@ -70,7 +70,7 @@ class Test_Dream_Initialization(unittest.TestCase):
 
     def test_total_var_dimension_init(self):
         """Test that DREAM correctly identifies the total number of dimensions in all sampled parameters for a few
-        test cases. """
+        test cases."""
         self.param, self.like = onedmodel()
         model = Model(likelihood=self.like, sampled_parameters=self.param)
         step = Dream(model=model, variables=self.param)
@@ -248,7 +248,7 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
 
     def test_chain_sampling_multidim_model(self):
         """Test that sampling from DREAM history for multi-dimensional model when the history is known matches with
-        expected possible samples. """
+        expected possible samples."""
         self.params, self.like = multidmodel()
         model = Model(likelihood=self.like, sampled_parameters=self.params)
         dream = Dream(model=model)
@@ -278,7 +278,7 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
 
     def test_proposal_generation_nosnooker_CR1(self):
         """Test proposal generation without a snooker update with a single or multiple proposed points and a
-        crossover value of 1 gives all dimensions changed on average as expected. """
+        crossover value of 1 gives all dimensions changed on average as expected."""
         self.param, self.like = multidmodel()
         model = Model(self.like, self.param)
         step = Dream(model=model)
@@ -318,7 +318,7 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
 
     def test_proposal_generation_nosnooker_CR33(self):
         """Test proposal generation without a snooker update with a single or multiple proposed points and a
-        crossover value of .33 gives 1/3 of all dimensions changed on average as expected. """
+        crossover value of .33 gives 1/3 of all dimensions changed on average as expected."""
         self.param, self.like = multidmodel()
         model = Model(self.like, self.param)
         step = Dream(model=model)
@@ -368,7 +368,7 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
 
     def test_proposal_generation_nosnooker_CR66(self):
         """Test proposal generation without a snooker update with a single or multiple proposed points and a
-        crossover value of 2/3 gives 2/3 of all dimensions changed on average as expected. """
+        crossover value of 2/3 gives 2/3 of all dimensions changed on average as expected."""
         self.param, self.like = multidmodel()
         model = Model(self.like, self.param)
         step = Dream(model=model)
@@ -482,7 +482,7 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
 
     def test_crossover_prob_estimation(self):
         """Test that crossover probabilities are updated as expected when changing or not changing parameter
-        locations and giving points that give a greater jump distance. """
+        locations and giving points that give a greater jump distance."""
         self.param, self.like = multidmodel()
         model = Model(self.like, self.param)
         dream = Dream(model=model, save_history=False)
@@ -763,7 +763,7 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
 
     def test_mp_sampledreamfxn(self):
         """Test the multiprocessing DREAM sample function returns data of the correct shape independently of the
-        run_dream wrapper. """
+        run_dream wrapper."""
         self.params, self.like = multidmodel()
         model = Model(self.like, self.params)
         dream = Dream(model=model, verbose=False, save_history=False)
@@ -814,7 +814,7 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
 
     def test_mp_paralleltempering_sampledreamfxn(self):
         """Test individual chain sampling function for parallel tempering returns an object of the correct type and
-        with a better logp. """
+        with a better logp."""
         self.params, self.like = multidmodel()
         model = Model(self.like, self.params)
         dream = Dream(model=model, verbose=False, save_history=False)
@@ -837,7 +837,7 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
 class Test_Dream_Full_Algorithm(unittest.TestCase):
     def test_history_correct_after_sampling_simple_model(self):
         """Test that the history saved matches with the returned sampled parameter values for a one-dimensional test
-        model. """
+        model."""
         self.param, self.like = onedmodel()
         model = Model(self.like, self.param)
         step = Dream(
@@ -879,7 +879,7 @@ class Test_Dream_Full_Algorithm(unittest.TestCase):
 
     def test_history_correct_after_sampling_multidim_model(self):
         """Test that the history saved matches with the returned sampled parameter values for a multi-dimensional
-        test model. """
+        test model."""
         self.param, self.like = multidmodel()
         model = Model(self.like, self.param)
         step = Dream(

@@ -56,7 +56,7 @@ np.save("ndim_gaussian_seed.npy", m)
 
 
 def likelihood(param_vec):
-    logp = log_F - .5 * np.sum(param_vec * np.dot(invC, param_vec))
+    logp = log_F - 0.5 * np.sum(param_vec * np.dot(invC, param_vec))
 
     return logp
 
@@ -109,7 +109,6 @@ if __name__ == "__main__":
     os.remove("ndim_gaussian_seed.npy")
 
     # Check convergence and continue sampling if not converged
-
     GR = Gelman_Rubin(sampled_params)
     print("At iteration: ", total_iterations, " GR = ", GR)
     np.savetxt(
@@ -191,7 +190,9 @@ if __name__ == "__main__":
     for dim in range(ndims):
         fig = plt.figure()
         sns.distplot(samples[:, dim], color=colors[dim])
-        fig_name = os.path.join(main_dir, f"PyDREAM_example_NDimGauss_dimension_{dim}.png")
+        fig_name = os.path.join(
+            main_dir, f"PyDREAM_example_NDimGauss_dimension_{dim}.png"
+        )
         fig.savefig(fig_name, dpi=300, bbox_inches="tight")
         plt.show()
         plt.close(fig)

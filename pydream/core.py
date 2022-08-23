@@ -11,17 +11,17 @@ from .model import Model
 
 
 def run_dream(
-        parameters,
-        likelihood,
-        nchains=5,
-        niterations=50000,
-        start=None,
-        restart=False,
-        verbose=True,
-        nverbose=10,
-        tempering=False,
-        mp_context=None,
-        **kwargs
+    parameters,
+    likelihood,
+    nchains=5,
+    niterations=50000,
+    start=None,
+    restart=False,
+    verbose=True,
+    nverbose=10,
+    tempering=False,
+    mp_context=None,
+    **kwargs
 ):
     """Run DREAM given a set of parameters with priors and a likelihood function.
 
@@ -85,7 +85,7 @@ def run_dream(
             variables=parameters,
             history_file=kwargs["model_name"] + "_DREAM_chain_history.npy",
             crossover_file=kwargs["model_name"]
-                           + "_DREAM_chain_adapted_crossoverprob.npy",
+            + "_DREAM_chain_adapted_crossoverprob.npy",
             gamma_file=kwargs["model_name"] + "_DREAM_chain_adapted_gammalevelprob.npy",
             verbose=verbose,
             mp_context=mp_context,
@@ -276,7 +276,7 @@ def _sample_dream_pt(nchains, niterations, step_instance, start, pool, verbose):
         logp2 = logpnews[random_chains[1]]
 
         alpha = ((T1 * loglike2) + (T2 * loglike1)) - (
-                (T1 * loglike1) + (T2 * loglike2)
+            (T1 * loglike1) + (T2 * loglike2)
         )
 
         if np.log(np.random.uniform()) < alpha:
@@ -356,14 +356,13 @@ def _sample_dream_pt_chain(args):
 
 
 def _setup_mp_dream_pool(
-        nchains, niterations, step_instance, start_pt=None, mp_context=None
+    nchains, niterations, step_instance, start_pt=None, mp_context=None
 ):
     min_njobs = (2 * len(step_instance.DEpairs)) + 1
     if nchains < min_njobs:
         raise Exception(
             "Dream should be run with at least (2*DEpairs)+1 number of chains. For current algorithmic settings, "
-            "set njobs>=%s. "
-            % str(min_njobs)
+            "set njobs>=%s. " % str(min_njobs)
         )
     if step_instance.history_file:
         old_history = np.load(step_instance.history_file)
@@ -372,30 +371,30 @@ def _setup_mp_dream_pool(
         step_instance.nseedchains = nold_history_records
         if niterations < step_instance.history_thin:
             arr_dim = (
-                              (np.floor(nchains * niterations / step_instance.history_thin) + nchains)
-                              * step_instance.total_var_dimension
-                      ) + len_old_history
+                (np.floor(nchains * niterations / step_instance.history_thin) + nchains)
+                * step_instance.total_var_dimension
+            ) + len_old_history
         else:
             arr_dim = (
-                    np.floor(
-                        (
-                                ((nchains * niterations) * step_instance.total_var_dimension)
-                                / step_instance.history_thin
-                        )
+                np.floor(
+                    (
+                        ((nchains * niterations) * step_instance.total_var_dimension)
+                        / step_instance.history_thin
                     )
-                    + len_old_history
+                )
+                + len_old_history
             )
     else:
         if niterations < step_instance.history_thin:
             arr_dim = (
-                              (np.floor(nchains * niterations / step_instance.history_thin) + nchains)
-                              * step_instance.total_var_dimension
-                      ) + (step_instance.nseedchains * step_instance.total_var_dimension)
+                (np.floor(nchains * niterations / step_instance.history_thin) + nchains)
+                * step_instance.total_var_dimension
+            ) + (step_instance.nseedchains * step_instance.total_var_dimension)
         else:
             arr_dim = np.floor(
                 (
-                        (nchains * niterations / step_instance.history_thin)
-                        * step_instance.total_var_dimension
+                    (nchains * niterations / step_instance.history_thin)
+                    * step_instance.total_var_dimension
                 )
             ) + (step_instance.nseedchains * step_instance.total_var_dimension)
 
@@ -467,17 +466,17 @@ def _setup_mp_dream_pool(
 
 
 def _mp_dream_init(
-        arr,
-        cp_arr,
-        nchains,
-        crossover_probs,
-        ncrossover_updates,
-        delta_m,
-        gamma_probs,
-        ngamma_updates,
-        delta_m_gamma,
-        val,
-        switch,
+    arr,
+    cp_arr,
+    nchains,
+    crossover_probs,
+    ncrossover_updates,
+    delta_m,
+    gamma_probs,
+    ngamma_updates,
+    delta_m_gamma,
+    val,
+    switch,
 ):
     DreamParameters.history = arr
     DreamParameters.current_positions = cp_arr
