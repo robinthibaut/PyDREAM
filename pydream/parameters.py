@@ -54,7 +54,8 @@ class FlatParam(SampledParam):
     Parameters
     ----------
     test_value: array
-        Representative value for the parameter.  Used to infer the parameter dimension, which is needed in the DREAM algorithm.
+        Representative value for the parameter.
+        Used to infer the parameter dimension, which is needed in the DREAM algorithm.
 
     """
 

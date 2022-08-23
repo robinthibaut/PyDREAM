@@ -16,21 +16,20 @@ import scipy.linalg
 from pydream.core import run_dream
 from pydream.parameters import FlatParam
 
-# from pydream.convergence import Gelman_Rubin
 
 log_F = np.array([-10.2880, -9.5949])
 
 d = 10
 k = 2
-log_prior = np.log(np.array([0.3333, 0.6666]))
-mu1 = np.linspace(-5, -5, num=d)
-mu2 = np.linspace(5, 5, num=d)
+log_prior = np.log(np.array([0.3333, 0.6666]))  # uniform prior
+mu1 = np.linspace(-5, -5, num=d)  # prior for component 1
+mu2 = np.linspace(5, 5, num=d)  # prior for component 2
 mu = np.array([mu1, mu2])
-C = np.identity(d)
+C = np.identity(d)  # covariance matrix
 L = scipy.linalg.cholesky(C, lower=False)  # Cholesky decomposition of covariance matrix
 diagL = np.diag(L)  # diagonal elements of L
 logDetSigma = 2 * np.sum(np.log(diagL))  # log of determinant of covariance matrix
-cov = np.identity(10)
+cov = np.identity(10)  # covariance matrix
 mean = np.linspace(0, 0, num=10)
 # Create initial samples matrix m that will be loaded in as DREAM history file
 m = np.random.multivariate_normal(mean, cov, size=100)
@@ -38,16 +37,16 @@ m = np.random.multivariate_normal(mean, cov, size=100)
 np.save("mixturemodel_seed.npy", m)
 
 
-def likelihood(params):
+def likelihood(params_):
     log_lh = np.zeros(k)
     for j in range(2):
-        log_lh[j] = -0.5 * np.sum((params - mu[j, :]) ** 2) + log_F[j]
+        log_lh[j] = -0.5 * np.sum((params_ - mu[j, :]) ** 2) + log_F[j]
     maxll = np.max(log_lh)
     post = np.array(np.exp(log_lh - maxll), dtype="float64")
     density = np.sum(post)
     # post = post / float(density)
     log_L = np.log(density) + maxll
-    # print 'params: ',params,'log_L: ',log_L,'log_lh: ',log_lh,'maxll: ',maxll,'post: ',post,'density: ',density
+    # print 'params_: ',params_,'log_L: ',log_L,'log_lh: ',log_lh,'maxll: ',maxll,'post: ',post,'density: ',density
 
     return log_L
 

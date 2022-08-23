@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Tue Dec  9 15:26:46 2014
 @author: Erin
@@ -17,17 +16,17 @@ from .corm import model as cox2_model
 
 pydream_path = os.path.dirname(inspect.getfile(run_dream))
 
-# Initialize PySB solver object for running simulations.  Simulation timespan should match experimental data.
+# Initialize PySB solver object for running simulations. Simulation timespan should match experimental data.
 tspan = np.linspace(0, 10, num=100)
 solver = Solver(cox2_model, tspan)
 solver.run()
 
 # Load experimental data to which CORM model will be fit here
 location = pydream_path + "/examples/corm/exp_data/"
-exp_data_PG = np.loadtxt(location + "exp_data_pg.txt")
+exp_data_PG = np.loadtxt(location + "exp_data_pg.txt")  # Experimental PG data (mean)
 exp_data_PGG = np.loadtxt(location + "exp_data_pgg.txt")
 
-exp_data_sd_PG = np.loadtxt(location + "exp_data_sd_pg.txt")
+exp_data_sd_PG = np.loadtxt(location + "exp_data_sd_pg.txt")  # Experimental PG data (standard deviation)
 exp_data_sd_PGG = np.loadtxt(location + "exp_data_sd_pgg.txt")
 
 # Experimental starting values of AA and 2-AG species (all in microM).
@@ -246,7 +245,7 @@ def likelihood(parameter_vector):
     logp_PG = np.sum(like_PGs.logpdf(PG_array))
     logp_PGG = np.sum(like_PGGs.logpdf(PGG_array))
 
-    # Calculate conservation for thermodynamic boxes in enyzme-substrate interaction diagram.
+    # Calculate conservation for thermodynamic boxes in enzyme-substrate interaction diagram.
 
     box1 = (
         (1 / (10 ** KD_AA_cat1))

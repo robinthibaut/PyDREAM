@@ -8,7 +8,7 @@ Created on Mon Dec  8 19:56:12 2014
 from pysb import Model, Monomer, Parameter, Initial, Rule, Observable
 from pysb.macros import bind, bind_complex, catalyze
 
-Model()
+model = Model()
 
 # Define individual species in model
 Monomer("COX2", ["allo", "cat"])  # Cyclooxygenase-2 enzyme
