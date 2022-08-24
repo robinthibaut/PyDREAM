@@ -100,7 +100,7 @@ if __name__ == "__main__":
         from matplotlib import pyplot as plt
 
         total_iterations = len(sampled_params[0])
-        burnin = total_iterations / 2
+        burnin = total_iterations // 2
         samples = np.concatenate(
             (
                 sampled_params[0][burnin:, :],

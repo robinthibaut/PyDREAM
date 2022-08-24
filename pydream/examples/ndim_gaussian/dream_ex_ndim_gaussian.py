@@ -176,7 +176,7 @@ if __name__ == "__main__":
     # try:
     # plot results
     total_iterations = len(old_samples[0])
-    burnin = total_iterations / 2
+    burnin = total_iterations // 2
     samples = np.concatenate(
         (
             old_samples[0][burnin:, :],

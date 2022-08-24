@@ -21,19 +21,19 @@ def Gelman_Rubin(sampled_parameters):
     chain_var = [
         np.var(sampled_parameters[chain][nburnin:, :], axis=0)
         for chain in range(nchains)
-    ]
+    ]  # variances of each chain
 
-    W = np.mean(chain_var, axis=0)
+    W = np.mean(chain_var, axis=0)  # within-chain variance
 
     chain_means = [
         np.mean(sampled_parameters[chain][nburnin:, :], axis=0)
         for chain in range(nchains)
-    ]
+    ]  # means of each chain
 
-    B = np.var(chain_means, axis=0)
+    B = np.var(chain_means, axis=0)  # between-chain variance
 
-    var_est = (W * (1 - (1.0 / nsamples))) + B
+    var_est = (W * (1 - (1.0 / nsamples))) + B  # estimated variance
 
-    Rhat = np.sqrt(np.divide(var_est, W))
+    Rhat = np.sqrt(np.divide(var_est, W))  # Rhat
 
     return Rhat
