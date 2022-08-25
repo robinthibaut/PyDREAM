@@ -935,7 +935,6 @@ class Test_Dream_Full_Algorithm(unittest.TestCase):
             model_name="test_boundaries",
             adapt_crossover=False,
             hardboundaries=True,
-            nverbose=10,
         )
         _, logps = run_dream(
             self.param,

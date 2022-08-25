@@ -37,14 +37,14 @@ class HyperParameters:
 
 @dataclass
 class DreamParameters:
-    history: np.ndarray
-    current_positions: np.ndarray
-    nchains: int
-    cross_probs: np.ndarray
-    ncr_updates: np.ndarray
-    delta_m: np.ndarray
-    gamma_level_probs: np.ndarray
-    ngamma_updates: np.ndarray
-    delta_m_gamma: np.ndarray
-    count: mp.Value
-    history_seeded: mp.Value
+    history: object  # history of the dream
+    current_positions: object  # current positions of the dream
+    nchains: object  # number of chains
+    cross_probs: object  # cross probabilities
+    ncr_updates: object  # number of cr updates
+    delta_m: object  # delta m
+    gamma_level_probs: object  # gamma level probabilities
+    ngamma_updates: object  # number of gamma updates
+    delta_m_gamma: object  # delta m gamma
+    count: mp.Value  # counter for the number of iterations
+    history_seeded: mp.Value  # history seeded
