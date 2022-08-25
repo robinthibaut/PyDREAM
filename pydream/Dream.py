@@ -50,7 +50,7 @@ class Dream:
 
         Parameters
         ----------
-        model : function
+        model : function or model object
         variables : iterable of instance(s) of SampledParam class
             Model parameters to be sampled with specified prior.
         nseedchains : int
@@ -377,7 +377,7 @@ class Dream:
 
                 # Check if all logps are -inf, in which case they'll all be impossible, and we need to generate more
                 # proposal points
-                while np.all(np.isfinite(np.array(log_ps)) is False):
+                while np.all(np.isfinite(np.array(log_ps)) == False):
                     if run_snooker:
                         (
                             proposed_pts,
@@ -1053,11 +1053,11 @@ class Dream:
                     x_upper = masked_point > self.maxs
                     if x_lower.any():
                         masked_point[x_lower] = self.mins[x_lower] + np.random.rand(
-                            len(np.where(x_lower is True)[0])
+                            len(np.where(x_lower == True)[0])
                         ) * (self.maxs[x_lower] - self.mins[x_lower])
                     if x_upper.any():
                         masked_point[x_upper] = self.mins[x_upper] + np.random.rand(
-                            len(np.where(x_upper is True)[0])
+                            len(np.where(x_upper == True)[0])
                         ) * (self.maxs[x_upper] - self.mins[x_upper])
 
                     proposed_pts[pt_num][self.boundary_mask] = masked_point
@@ -1084,11 +1084,11 @@ class Dream:
 
                 if x_lower.any():
                     masked_point[x_lower] = self.mins[x_lower] + np.random.rand(
-                        len(np.where(x_lower is True)[0])
+                        len(np.where(x_lower == True)[0])  # noqa
                     ) * (self.maxs[x_lower] - self.mins[x_lower])
                 if x_upper.any():
                     masked_point[x_upper] = self.mins[x_upper] + np.random.rand(
-                        len(np.where(x_upper is True)[0])
+                        len(np.where(x_upper == True)[0])  # noqa
                     ) * (self.maxs[x_upper] - self.mins[x_upper])
                 if not snooker:
                     try:

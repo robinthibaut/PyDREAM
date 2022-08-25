@@ -150,7 +150,7 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         fraction = step.snooker
         for iteration in range(10000):
             choice = step.set_snooker()
-            if choice == True:
+            if choice:
                 n_snooker_choices += 1
         emp_frac = n_snooker_choices / 10000.0
         self.assertAlmostEqual(emp_frac, fraction, places=1)
@@ -220,7 +220,8 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         )
 
     def test_chain_sampling_simple_model(self):
-        """Test that sampling from DREAM history for one dimensional model when the history is known matches with expected possible samples."""
+        """Test that sampling from DREAM history for one dimensional model when the history is known matches with
+        expected possible samples. """
         self.param, self.like = onedmodel()
         model = Model(likelihood=self.like, sampled_parameters=self.param)
         dream = Dream(model=model)
@@ -530,14 +531,14 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         self.assertAlmostEqual(np.sum(new_cr_probs), 1.0, places=1)
         old_cr_probs = new_cr_probs
         for i, q_new in zip(
-            list(range(5)),
-            [
-                np.array([15]),
-                np.array([17]),
-                np.array([19]),
-                np.array([21]),
-                np.array([23]),
-            ],
+                list(range(5)),
+                [
+                    np.array([15]),
+                    np.array([17]),
+                    np.array([19]),
+                    np.array([21]),
+                    np.array([23]),
+                ],
         ):
             new_cr_probs = dream.estimate_crossover_probabilities(
                 dream.total_var_dimension, q0, q_new, CR_vals[1]
@@ -645,7 +646,7 @@ class Test_Dream_Algorithm_Components(unittest.TestCase):
         new_history_seed_reshaped = new_history_seed.reshape(old_history.shape)
         self.assertIs(np.array_equal(old_history, new_history_seed_reshaped), True)
 
-        added_history = new_history[len(old_history.flatten()) : :]
+        added_history = new_history[len(old_history.flatten())::]
         sorted_history = np.sort(added_history)
         sorted_sampled_params = np.sort(np.array(sampled_params).flatten())
 
@@ -867,8 +868,8 @@ class Test_Dream_Full_Algorithm(unittest.TestCase):
             * ((10 * 5 / step.history_thin) + step.nseedchains),
         )
         history_no_seedchains = history[
-            (step.total_var_dimension * step.nseedchains) : :
-        ]
+                                (step.total_var_dimension * step.nseedchains)::
+                                ]
         sorted_history = np.sort(history_no_seedchains)
         sorted_sampled_params = np.sort(np.array(sampled_params).flatten())
 
@@ -910,8 +911,8 @@ class Test_Dream_Full_Algorithm(unittest.TestCase):
             * ((10 * 5 / step.history_thin) + step.nseedchains),
         )
         history_no_seedchains = history[
-            (step.total_var_dimension * step.nseedchains) : :
-        ]
+                                (step.total_var_dimension * step.nseedchains)::
+                                ]
 
         sorted_history = np.sort(history_no_seedchains)
         sorted_sampled_params = np.sort(np.array(sampled_params).flatten())

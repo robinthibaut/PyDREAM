@@ -75,7 +75,7 @@ def run_dream(
     if type(parameters) is not list:
         parameters = [parameters]
 
-    model = Model(likelihood=likelihood, sampled_parameters=parameters)
+    model = Model(likelihood=likelihood, sampled_parameters=parameters)  # Create model
 
     if restart:
         step_instance = Dream(
@@ -86,11 +86,14 @@ def run_dream(
             + "_DREAM_chain_adapted_crossoverprob.npy",
             gamma_file=kwargs["model_name"] + "_DREAM_chain_adapted_gammalevelprob.npy",
             verbose=verbose,
-            mp_context=mp_context,
+            mp_context=mp_context
         )
     else:
         step_instance = Dream(
-            model=model, variables=parameters, verbose=verbose, mp_context=mp_context
+            model=model,
+            variables=parameters,
+            verbose=verbose,
+            mp_context=mp_context
         )
 
     pool = _setup_mp_dream_pool(
