@@ -14,32 +14,32 @@ from pydream import DreamParameters
 
 class Dream:
     def __init__(
-            self,
-            model,
-            variables=None,
-            nseedchains=None,
-            nCR=3,
-            adapt_crossover=True,
-            adapt_gamma=False,
-            crossover_burnin=None,
-            DEpairs=1,
-            lamb=0.05,
-            zeta=1e-12,
-            history_thin=10,
-            snooker=0.10,
-            p_gamma_unity=0.20,
-            gamma_levels=1,
-            start_random=True,
-            save_history=True,
-            history_file=False,
-            crossover_file=False,
-            gamma_file=False,
-            multitry=False,
-            parallel=False,
-            verbose=False,
-            model_name=False,
-            hardboundaries=True,
-            mp_context=None
+        self,
+        model,
+        variables=None,
+        nseedchains=None,
+        nCR=3,
+        adapt_crossover=True,
+        adapt_gamma=False,
+        crossover_burnin=None,
+        DEpairs=1,
+        lamb=0.05,
+        zeta=1e-12,
+        history_thin=10,
+        snooker=0.10,
+        p_gamma_unity=0.20,
+        gamma_levels=1,
+        start_random=True,
+        save_history=True,
+        history_file=False,
+        crossover_file=False,
+        gamma_file=False,
+        multitry=False,
+        parallel=False,
+        verbose=False,
+        model_name=False,
+        hardboundaries=True,
+        mp_context=None,
     ):
 
         """
@@ -242,16 +242,15 @@ class Dream:
         for gamma_level in range(1, self.ngamma + 1):
             for delta in range(1, DEpairs + 1):
                 gamma_array[gamma_level - 1, delta - 1, :] = (
-                                                                     2.38
-                                                                     / np.sqrt(
-                                                                 2
-                                                                 * delta
-                                                                 * np.linspace(
-                                                                     1, self.total_var_dimension,
-                                                                     num=self.total_var_dimension
-                                                                 )
-                                                             )
-                                                             ) / gamma_level_decrease
+                    2.38
+                    / np.sqrt(
+                        2
+                        * delta
+                        * np.linspace(
+                            1, self.total_var_dimension, num=self.total_var_dimension
+                        )
+                    )
+                ) / gamma_level_decrease
             gamma_level_decrease = gamma_level_decrease * 2
         self.gamma_arr = gamma_array
         self.gamma = None
@@ -293,7 +292,7 @@ class Dream:
                                 start_loc = i * self.total_var_dimension
                                 end_loc = start_loc + self.total_var_dimension
                                 DreamParameters.history[
-                                start_loc:end_loc
+                                    start_loc:end_loc
                                 ] = self.draw_from_prior(self.variables)
                             DreamParameters.history_seeded.value = b"T"
                     else:
@@ -456,7 +455,7 @@ class Dream:
                     # X) (i.e. moving from Xref to proposed point y to original point X)
                     snooker_logp_ref = np.append(snooker_logp_ref, 0)
                     total_reference_logp = (
-                            ref_log_ps + snooker_logp_ref + snooker_logp_prop
+                        ref_log_ps + snooker_logp_ref + snooker_logp_prop
                     )
 
                 else:
@@ -482,7 +481,7 @@ class Dream:
                     total_proposed_logp = q_logp + snooker_logp_prop
                     norm = np.linalg.norm(q0 - z)
                     snooker_current_logp = np.log(norm, where=norm != 0) * (
-                            self.total_var_dimension - 1
+                        self.total_var_dimension - 1
                     )
                     total_old_logp = self.last_logp + snooker_current_logp
 
@@ -574,13 +573,11 @@ class Dream:
             # Don't do this for the first 10 iterations to give all chains a chance to fill in the shared current
             # position array Don't count iterations where gamma was set to 1 in crossover adaptation calculations
             if (
-                    self.adapt_crossover
-                    and 10 < self.iter < self.crossover_burnin
-                    and not np.any(np.array(self.gamma) == 1.0)
+                self.adapt_crossover
+                and 10 < self.iter < self.crossover_burnin
+                and not np.any(np.array(self.gamma) == 1.0)
             ):
-                with DreamParameters.cross_probs.get_lock() and DreamParameters.count.get_lock() and \
-                     DreamParameters.ncr_updates.get_lock() and DreamParameters.current_positions.get_lock() \
-                     and DreamParameters.delta_m.get_lock():
+                with DreamParameters.cross_probs.get_lock() and DreamParameters.count.get_lock() and DreamParameters.ncr_updates.get_lock() and DreamParameters.current_positions.get_lock() and DreamParameters.delta_m.get_lock():
                     # If a snooker update was run, then regardless of the originally selected CR, a CR=1.0 was used.
                     if not run_snooker:
                         self.CR_probabilities = self.estimate_crossover_probabilities(
@@ -593,14 +590,12 @@ class Dream:
                         )
 
             if (
-                    self.adapt_gamma
-                    and 10 < self.iter < self.crossover_burnin
-                    and not np.any(np.array(self.gamma) == 1.0)
-                    and not run_snooker
+                self.adapt_gamma
+                and 10 < self.iter < self.crossover_burnin
+                and not np.any(np.array(self.gamma) == 1.0)
+                and not run_snooker
             ):
-                with DreamParameters.gamma_level_probs.get_lock() and DreamParameters.count.get_lock() and \
-                     DreamParameters.ngamma_updates.get_lock() and DreamParameters.current_positions.get_lock() and \
-                     DreamParameters.delta_m_gamma.get_lock():
+                with DreamParameters.gamma_level_probs.get_lock() and DreamParameters.count.get_lock() and DreamParameters.ngamma_updates.get_lock() and DreamParameters.current_positions.get_lock() and DreamParameters.delta_m_gamma.get_lock():
                     self.gamma_probabilities = self.estimate_gamma_level_probs(
                         self.total_var_dimension, q0, q_new, gamma_level
                     )
@@ -613,17 +608,13 @@ class Dream:
                     nchains_finished_burnin = DreamParameters.nchains.value
 
                 if self.adapt_gamma:
-                    with DreamParameters.gamma_level_probs.get_lock() and DreamParameters.count.get_lock() and \
-                         DreamParameters.ngamma_updates.get_lock() and DreamParameters.current_positions.get_lock() and\
-                         DreamParameters.delta_m_gamma.get_lock():
+                    with DreamParameters.gamma_level_probs.get_lock() and DreamParameters.count.get_lock() and DreamParameters.ngamma_updates.get_lock() and DreamParameters.current_positions.get_lock() and DreamParameters.delta_m_gamma.get_lock():
                         self.gamma_probabilities = self.estimate_gamma_level_probs(
                             self.total_var_dimension, q0, q_new, gamma_level
                         )
 
                 if self.adapt_crossover:
-                    with DreamParameters.cross_probs.get_lock() and DreamParameters.count.get_lock() and \
-                         DreamParameters.ncr_updates.get_lock() and DreamParameters.current_positions.get_lock() and \
-                         DreamParameters.delta_m.get_lock():
+                    with DreamParameters.cross_probs.get_lock() and DreamParameters.count.get_lock() and DreamParameters.ncr_updates.get_lock() and DreamParameters.current_positions.get_lock() and DreamParameters.delta_m.get_lock():
                         # If a snooker update was run, then regardless of the originally selected CR, a CR=1.0 was used.
                         if not run_snooker:
                             self.CR_probabilities = (
@@ -647,14 +638,14 @@ class Dream:
                 if self.adapt_gamma:
                     with DreamParameters.gamma_level_probs.get_lock():
                         self.gamma_probabilities = DreamParameters.gamma_level_probs[
-                                                   0: self.ngamma
-                                                   ]
+                            0 : self.ngamma
+                        ]
 
                 if self.adapt_crossover:
                     with DreamParameters.cross_probs.get_lock():
                         self.CR_probabilities = DreamParameters.cross_probs[
-                                                0: self.nCR
-                                                ]
+                            0 : self.nCR
+                        ]
 
             self.iter += 1
         except Exception as e:
@@ -709,7 +700,7 @@ class Dream:
         CR : float
             selected crossover probability for this step"""
 
-        cross_probs = DreamParameters.cross_probs[0: self.nCR]
+        cross_probs = DreamParameters.cross_probs[0 : self.nCR]
 
         # Compute squared normalized jumping distance
         m_loc = int(np.where(self.CR_values == CR)[0])
@@ -732,17 +723,17 @@ class Dream:
         # Update probabilities of tested crossover value Leave probabilities unchanged until all possible crossover
         # values have had at least one successful move so that a given value's probability isn't prematurely set to
         # 0, preventing further testing.
-        delta_ms = np.array(DreamParameters.delta_m[0: self.nCR])
+        delta_ms = np.array(DreamParameters.delta_m[0 : self.nCR])
         # ncr_updates = np.array(DreamParameters.ncr_updates[0: self.nCR])
 
         if np.all(delta_ms != 0):
             for m in range(self.nCR):
                 cross_probs[m] = (
-                                         DreamParameters.delta_m[m] / DreamParameters.ncr_updates[m]
-                                 ) * self.nchains
+                    DreamParameters.delta_m[m] / DreamParameters.ncr_updates[m]
+                ) * self.nchains
             cross_probs = cross_probs / np.sum(cross_probs)
 
-        DreamParameters.cross_probs[0: self.nCR] = cross_probs
+        DreamParameters.cross_probs[0 : self.nCR] = cross_probs
 
         self.CR_probabilities = cross_probs
 
@@ -768,28 +759,28 @@ class Dream:
 
         sd_by_dim = np.std(current_positions, axis=0)
 
-        gamma_level_probs = DreamParameters.gamma_level_probs[0: self.ngamma]
+        gamma_level_probs = DreamParameters.gamma_level_probs[0 : self.ngamma]
 
         gamma_loc = int(np.where(self.gamma_level_values == gamma_level)[0])
 
         DreamParameters.ngamma_updates[gamma_loc] += 1
 
         DreamParameters.delta_m_gamma[gamma_loc] = DreamParameters.delta_m_gamma[
-                                                       gamma_loc
-                                                   ] + np.nan_to_num(np.sum(((q_new - q0) / sd_by_dim) ** 2))
+            gamma_loc
+        ] + np.nan_to_num(np.sum(((q_new - q0) / sd_by_dim) ** 2))
 
-        delta_ms_gamma = np.array(DreamParameters.delta_m_gamma[0: self.ngamma])
+        delta_ms_gamma = np.array(DreamParameters.delta_m_gamma[0 : self.ngamma])
 
         if np.all(delta_ms_gamma != 0):
 
             for m in range(self.ngamma):
                 gamma_level_probs[m] = (
-                                               DreamParameters.delta_m_gamma[m] / DreamParameters.ngamma_updates[m]
-                                       ) * self.nchains
+                    DreamParameters.delta_m_gamma[m] / DreamParameters.ngamma_updates[m]
+                ) * self.nchains
 
             gamma_level_probs = gamma_level_probs / np.sum(gamma_level_probs)
 
-        DreamParameters.gamma_level_probs[0: self.ngamma] = gamma_level_probs
+        DreamParameters.gamma_level_probs[0 : self.ngamma] = gamma_level_probs
 
         return gamma_level_probs
 
@@ -942,7 +933,7 @@ class Dream:
         return sampled_chains
 
     def generate_proposal_points(
-            self, n_proposed_pts, q0, CR, DEpairs, gamma_level, snooker
+        self, n_proposed_pts, q0, CR, DEpairs, gamma_level, snooker
     ):
         """Generate proposal points.
 
@@ -975,7 +966,7 @@ class Dream:
             chain_differences = np.array(
                 [
                     np.sum(sampled_history_pts[i][0:DEpairs], axis=0)
-                    - np.sum(sampled_history_pts[i][DEpairs: DEpairs * 2], axis=0)
+                    - np.sum(sampled_history_pts[i][DEpairs : DEpairs * 2], axis=0)
                     for i in range(len(sampled_history_pts))
                 ]
             )
@@ -1050,11 +1041,11 @@ class Dream:
                     x_upper = masked_point > self.maxs
                     if x_lower.any():
                         masked_point[x_lower] = (
-                                2 * self.mins[x_lower] - masked_point[x_lower]
+                            2 * self.mins[x_lower] - masked_point[x_lower]
                         )
                     if x_upper.any():
                         masked_point[x_upper] = (
-                                2 * self.maxs[x_upper] - masked_point[x_upper]
+                            2 * self.maxs[x_upper] - masked_point[x_upper]
                         )
 
                     # Occasionally reflection will result in points still outside of boundaries
@@ -1079,12 +1070,12 @@ class Dream:
 
                 if x_lower.any():
                     masked_point[x_lower] = (
-                            2 * self.mins[x_lower] - masked_point[x_lower]
+                        2 * self.mins[x_lower] - masked_point[x_lower]
                     )
 
                 if x_upper.any():
                     masked_point[x_upper] = (
-                            2 * self.maxs[x_upper] - masked_point[x_upper]
+                        2 * self.maxs[x_upper] - masked_point[x_upper]
                     )
 
                 # Occasionally reflection will result in points still outside of boundaries
@@ -1173,12 +1164,12 @@ class Dream:
                 np.array(
                     [
                         (
-                                np.sum(
-                                    diff_chains_to_be_projected[point]
-                                    * proj_vec_diff[point]
-                                )
-                                / D[point]
+                            np.sum(
+                                diff_chains_to_be_projected[point]
                                 * proj_vec_diff[point]
+                            )
+                            / D[point]
+                            * proj_vec_diff[point]
                         )
                         for point in range(n_proposed_pts)
                     ]
@@ -1200,29 +1191,29 @@ class Dream:
 
             # Orthogonal projection of chains_to_projected onto projection vector
             diff_chains_to_be_projected = (
-                    chains_to_be_projected[0] - chains_to_be_projected[1]
+                chains_to_be_projected[0] - chains_to_be_projected[1]
             )
             zP = (
-                    np.nan_to_num(
-                        np.array(
-                            [
-                                np.sum(
-                                    np.divide(
-                                        (diff_chains_to_be_projected * proj_vec_diff),
-                                        D,
-                                        where=D != 0,
-                                    )
+                np.nan_to_num(
+                    np.array(
+                        [
+                            np.sum(
+                                np.divide(
+                                    (diff_chains_to_be_projected * proj_vec_diff),
+                                    D,
+                                    where=D != 0,
                                 )
-                            ]
-                        )
+                            )
+                        ]
                     )
-                    * proj_vec_diff
+                )
+                * proj_vec_diff
             )
             dx = self.gamma * zP
             proposed_pts = q0 + dx
             norm = np.linalg.norm(proposed_pts - sampled_history_pt)
             snooker_logp = np.log(norm, where=norm != 0) * (
-                    self.total_var_dimension - 1
+                self.total_var_dimension - 1
             )
 
         return proposed_pts, snooker_logp, sampled_history_pt
@@ -1427,6 +1418,7 @@ def metrop_select(mr, q, q0):
 
 # it will use the information above to initialize a class called DreamPool
 
+
 class NonDaemonMixin(object):
     @property
     def daemon(self):
@@ -1454,10 +1446,8 @@ try:
     class NonDaemonForkProcess(NonDaemonMixin, context.ForkProcess):
         pass
 
-
     class NonDaemonForkContext(context.ForkContext):
         Process = NonDaemonForkProcess
-
 
     _nondaemon_context_mapper["fork"] = NonDaemonForkContext()
 except AttributeError:
@@ -1468,10 +1458,8 @@ try:
     class NonDaemonForkServerProcess(NonDaemonMixin, context.ForkServerProcess):
         pass
 
-
     class NonDaemonForkServerContext(context.ForkServerContext):
         Process = NonDaemonForkServerProcess
-
 
     _nondaemon_context_mapper["forkserver"] = NonDaemonForkServerContext()
 except AttributeError:
@@ -1480,12 +1468,12 @@ except AttributeError:
 
 class DreamPool(pool.Pool):
     def __init__(
-            self,
-            processes=None,
-            initializer=None,
-            initargs=(),
-            maxtasksperchild=None,
-            context_=None,
+        self,
+        processes=None,
+        initializer=None,
+        initargs=(),
+        maxtasksperchild=None,
+        context_=None,
     ):
         if context_ is None:
             context_ = mp.get_context()

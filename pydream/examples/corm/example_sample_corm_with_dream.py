@@ -26,7 +26,9 @@ location = pydream_path + "/examples/corm/exp_data/"
 exp_data_PG = np.loadtxt(location + "exp_data_pg.txt")  # Experimental PG data (mean)
 exp_data_PGG = np.loadtxt(location + "exp_data_pgg.txt")
 
-exp_data_sd_PG = np.loadtxt(location + "exp_data_sd_pg.txt")  # Experimental PG data (standard deviation)
+exp_data_sd_PG = np.loadtxt(
+    location + "exp_data_sd_pg.txt"
+)  # Experimental PG data (standard deviation)
 exp_data_sd_PGG = np.loadtxt(location + "exp_data_sd_pgg.txt")
 
 # Experimental starting values of AA and 2-AG species (all in microM).
