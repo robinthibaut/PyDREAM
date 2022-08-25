@@ -40,6 +40,7 @@ class Dream:
         model_name=False,
         hardboundaries=True,
         mp_context=None,
+        **kwargs,  # Do not remove this keyword argument
     ):
 
         """
@@ -183,7 +184,7 @@ class Dream:
 
         # Load crossover values from file if given, else set to 1/nCR for all and adapt if requested
         if crossover_file:
-            self.CR_probabilities = np.load(crossover_file)
+            self.CR_probabilities = np.load(self.crossover_file)
             self.nCR = len(self.CR_probabilities)
             if self.adapt_crossover:
                 warnings.warn(
@@ -1341,7 +1342,7 @@ class Dream:
         prefix : str
             Prefix to add to history filename when saving"""
 
-        filename = prefix + "DREAM_chain_history.npy"
+        filename = f"{prefix}DREAM_chain_history.npy"
         print("Saving history to file: ", filename)
         np.save(filename, history)
 

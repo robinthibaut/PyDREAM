@@ -19,7 +19,7 @@ def run_dream(
     nverbose=10,
     tempering=False,
     mp_context=None,
-    **kwargs
+    **kwargs,
 ):
     """Run DREAM given a set of parameters with priors and a likelihood function.
 
@@ -86,14 +86,16 @@ def run_dream(
             + "_DREAM_chain_adapted_crossoverprob.npy",
             gamma_file=kwargs["model_name"] + "_DREAM_chain_adapted_gammalevelprob.npy",
             verbose=verbose,
-            mp_context=mp_context
+            mp_context=mp_context,
+            **kwargs,
         )
     else:
         step_instance = Dream(
             model=model,
             variables=parameters,
             verbose=verbose,
-            mp_context=mp_context
+            mp_context=mp_context,
+            **kwargs,
         )
 
     pool = _setup_mp_dream_pool(
@@ -455,8 +457,6 @@ def _setup_mp_dream_pool(
             tf,
         ),
     )
-    # p = mp.pool.ThreadPool(nchains, initializer=_mp_dream_init, initargs=(history_arr, current_position_arr, shared_nchains, crossover_probabilities, ncrossover_updates, delta_m, gamma_probabilities, ngamma_updates, delta_m_gamma, n, tf, ))
-    # p = mp.Pool(nchains, initializer=_mp_dream_init, initargs=(history_arr, current_position_arr, shared_nchains, crossover_probabilities, ncrossover_updates, delta_m, gamma_probabilities, ngamma_updates, delta_m_gamma, n, tf, ))
 
     return p
 
